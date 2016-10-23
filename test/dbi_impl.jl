@@ -224,9 +224,9 @@ function test_dbi()
     finish(stmt)
 
     stmt = prepare(conn, """
-    SELECT 
-    '{1,2}'::integer[], 
-    '{1.0,2.0}'::double precision[], 
+    SELECT
+    '{1,2}'::integer[],
+    '{1.0,2.0}'::double precision[],
     '{"aaa", "bbb"}'::text[],
     '{"aaa", "bbb"}'::varchar[];
     """)
