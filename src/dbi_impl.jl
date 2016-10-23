@@ -79,8 +79,8 @@ function checkerrclear(result::Ptr{PGresult})
 
     try
         if status == PGRES_FATAL_ERROR
-            statustext = bytestring(PQresStatus(status))
-            errmsg = bytestring(PQresultErrorMessage(result))
+            statustext = unsafe_string(PQresStatus(status))
+            errmsg = unsafe_string(PQresultErrorMessage(result))
             error("$statustext: $errmsg")
         end
     finally
@@ -93,14 +93,14 @@ escapeliteral(db::PostgresDatabaseHandle, value::AbstractString) = escapeliteral
 
 function escapeliteral(db::PostgresDatabaseHandle, value::Union{ASCIIString, UTF8String})
     strptr = PQescapeLiteral(db.ptr, value, sizeof(value))
-    str = bytestring(strptr)
+    str = unsafe_string(strptr)
     PQfreemem(strptr)
     return str
 end
 
 function escapeidentifier(db::PostgresDatabaseHandle, value::Union{ASCIIString, UTF8String})
     strptr = PQescapeIdentifier(db.ptr, value, sizeof(value))
-    str = bytestring(strptr)
+    str = unsafe_string(strptr)
     PQfreemem(strptr)
     return str
 end
@@ -293,7 +293,7 @@ end
 function DBI.fetchdf(result::PostgresResultHandle)
     df = DataFrame()
     for i = 0:(length(result.types)-1)
-        df[symbol(bytestring(PQfname(result.ptr, i)))] = unsafe_fetchcol_dataarray(result, i)
+        df[Symbol(unsafe_string(PQfname(result.ptr, i)))] = unsafe_fetchcol_dataarray(result, i)
     end
 
     return df

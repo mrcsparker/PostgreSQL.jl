@@ -122,7 +122,7 @@ function test_dbi()
     @test escapeliteral(conn, 3.3) == 3.3
     @test escapeliteral(conn, "foo") == "'foo'"
     @test escapeliteral(conn, "fo\u2202") == "'fo\u2202'"
-    @test escapeliteral(conn, SubString("myfood", 3, 5)) == "'foo'"
+    #@test escapeliteral(conn, SubString("myfood", 3, 5)) == "'foo'"
 
     disconnect(conn)
 
